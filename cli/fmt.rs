@@ -9,10 +9,10 @@
 
 use crate::colors;
 use crate::diff::diff;
+use crate::dprint_plugin_typescript as dprint;
 use crate::fs::files_in_subtree;
 use crate::op_error::OpError;
 use deno_core::ErrBox;
-use dprint_plugin_typescript as dprint;
 use std::fs;
 use std::io::stdin;
 use std::io::stdout;
@@ -69,7 +69,7 @@ async fn check_source_files(
                 println!();
                 println!(
                   "{} {}:",
-                  colors::bold("from".to_string()),
+                  colors::bold("from"),
                   file_path.display().to_string()
                 );
                 println!("{}", diff);
@@ -323,12 +323,4 @@ fn test_is_supported() {
   assert!(is_supported(Path::new("foo.JSX")));
   assert!(is_supported(Path::new("foo.mjs")));
   assert!(!is_supported(Path::new("foo.mjsx")));
-}
-
-#[tokio::test]
-async fn check_tests_dir() {
-  // Because of cli/tests/error_syntax.js the following should fail but not
-  // crash.
-  let r = format(vec!["./tests".to_string()], true).await;
-  assert!(r.is_err());
 }

@@ -1,4 +1,3 @@
-const { test } = Deno;
 import {
   bench,
   runBenchmarks,
@@ -14,7 +13,7 @@ import {
   assertThrowsAsync,
 } from "./asserts.ts";
 
-test({
+Deno.test({
   name: "benching",
 
   fn: async function (): Promise<void> {
@@ -47,8 +46,8 @@ test({
           async (denoland: string): Promise<void> => {
             const r = await fetch(denoland);
             await r.text();
-          }
-        )
+          },
+        ),
       );
       b.stop();
     });
@@ -74,7 +73,7 @@ test({
     assertEquals(benchResult.results.length, 5);
 
     const resultWithSingleRunsFiltered = benchResult.results.filter(
-      ({ name }) => name === "forDecrementX1e9"
+      ({ name }) => name === "forDecrementX1e9",
     );
     assertEquals(resultWithSingleRunsFiltered.length, 1);
 
@@ -86,7 +85,7 @@ test({
     assertEquals(resultWithSingleRuns.measuredRunsMs.length, 1);
 
     const resultWithMultipleRunsFiltered = benchResult.results.filter(
-      ({ name }) => name === "runs100ForIncrementX1e6"
+      ({ name }) => name === "runs100ForIncrementX1e6",
     );
     assertEquals(resultWithMultipleRunsFiltered.length, 1);
 
@@ -101,7 +100,7 @@ test({
   },
 });
 
-test({
+Deno.test({
   name: "Bench without name should throw",
   fn() {
     assertThrows(
@@ -109,12 +108,12 @@ test({
         bench(() => {});
       },
       Error,
-      "The benchmark function must not be anonymous"
+      "The benchmark function must not be anonymous",
     );
   },
 });
 
-test({
+Deno.test({
   name: "Bench without stop should throw",
   fn: async function (): Promise<void> {
     await assertThrowsAsync(
@@ -126,12 +125,12 @@ test({
         await runBenchmarks({ only: /benchWithoutStop/, silent: true });
       },
       BenchmarkRunError,
-      "The benchmark timer's stop method must be called"
+      "The benchmark timer's stop method must be called",
     );
   },
 });
 
-test({
+Deno.test({
   name: "Bench without start should throw",
   fn: async function (): Promise<void> {
     await assertThrowsAsync(
@@ -143,12 +142,12 @@ test({
         await runBenchmarks({ only: /benchWithoutStart/, silent: true });
       },
       BenchmarkRunError,
-      "The benchmark timer's start method must be called"
+      "The benchmark timer's start method must be called",
     );
   },
 });
 
-test({
+Deno.test({
   name: "Bench with stop before start should throw",
   fn: async function (): Promise<void> {
     await assertThrowsAsync(
@@ -161,12 +160,12 @@ test({
         await runBenchmarks({ only: /benchStopBeforeStart/, silent: true });
       },
       BenchmarkRunError,
-      "The benchmark timer's start method must be called before its stop method"
+      "The benchmark timer's start method must be called before its stop method",
     );
   },
 });
 
-test({
+Deno.test({
   name: "clearBenchmarks should clear all candidates",
   fn: async function (): Promise<void> {
     dummyBench("test");
@@ -179,7 +178,7 @@ test({
   },
 });
 
-test({
+Deno.test({
   name: "clearBenchmarks with only as option",
   fn: async function (): Promise<void> {
     // to reset candidates
@@ -197,7 +196,7 @@ test({
   },
 });
 
-test({
+Deno.test({
   name: "clearBenchmarks with skip as option",
   fn: async function (): Promise<void> {
     // to reset candidates
@@ -215,7 +214,7 @@ test({
   },
 });
 
-test({
+Deno.test({
   name: "clearBenchmarks with only and skip as option",
   fn: async function (): Promise<void> {
     // to reset candidates
@@ -236,7 +235,7 @@ test({
   },
 });
 
-test({
+Deno.test({
   name: "progressCallback of runBenchmarks",
   fn: async function (): Promise<void> {
     clearBenchmarks();
@@ -250,7 +249,7 @@ test({
       { skip: /skip/, silent: true },
       (progress) => {
         progressCallbacks.push(progress);
-      }
+      },
     );
 
     let pc = 0;
@@ -323,7 +322,7 @@ test({
     assertEquals(progress.results.length, 2);
     assert(!!progress.results.find(({ name }) => name == "single"));
     const resultOfMultiple = progress.results.filter(
-      ({ name }) => name == "multiple"
+      ({ name }) => name == "multiple",
     );
     assertEquals(resultOfMultiple.length, 1);
     assert(!!resultOfMultiple[0].measuredRunsMs);
@@ -338,7 +337,7 @@ test({
   },
 });
 
-test({
+Deno.test({
   name: "async progressCallback",
   fn: async function (): Promise<void> {
     clearBenchmarks();
